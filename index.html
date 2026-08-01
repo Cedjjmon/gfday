@@ -5,19 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>For You ☀</title>
 <style>
-/* ============================================================
-   HOW TO CUSTOMIZE (all the important bits live near the top
-   of the <script> at the bottom of this file):
-   1. PASSCODE      – the code she types to unlock the page
-   2. HINT_TEXT     – optional hint shown under the input
-   3. BOUQUET_IMG / PLUSH_IMG / KEEPSAKE_IMG – paste an image
-      URL or a base64 data-URL between the quotes to swap the
-      hand-drawn illustrations for real photos. Leave blank
-      ("") to keep the drawn version.
-   4. LETTER_PARAGRAPHS – your actual letter, one string per
-      paragraph.
-   5. HER_NAME / SIGNATURE – used in the letter heading + sign-off
-   ============================================================ */
 
 @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,600;1,9..144,500&family=Outfit:wght@300;400;500;600&display=swap');
 
@@ -48,7 +35,7 @@ body{
 }
 #app{position:relative; min-height:100vh; width:100%;}
 
-/* ---------- ambient floating light dots ---------- */
+
 .ambient{position:fixed; inset:0; pointer-events:none; z-index:0; overflow:hidden;}
 .mote{
   position:absolute; border-radius:50%;
@@ -62,7 +49,7 @@ body{
   100%{transform:translateY(0) translateX(0) scale(1);}
 }
 
-/* ---------- generic screen layout ---------- */
+
 .screen{
   position:absolute; inset:0;
   display:flex; align-items:center; justify-content:center;
@@ -75,7 +62,7 @@ body{
 }
 .screen.active{opacity:1; visibility:visible; pointer-events:auto;}
 
-/* ================= PASSCODE SCREEN ================= */
+
 .eyebrow{
   font-size:12px; letter-spacing:.28em; text-transform:uppercase;
   color:var(--gold-deep); font-weight:500; margin-bottom:14px;
@@ -134,7 +121,7 @@ body{
 }
 .error-msg.show{opacity:1;}
 
-/* ================= GIFT BOX SCREEN ================= */
+
 .box-wrap{
   cursor:pointer; user-select:none;
   display:flex; flex-direction:column; align-items:center;
@@ -158,7 +145,7 @@ body{
 }
 @keyframes softPulse{0%,100%{opacity:.55;} 50%{opacity:1;}}
 
-/* lid + ribbon animation classes toggled by JS */
+
 #lid{transform-origin:20px 78px; transition:transform .7s var(--ease), opacity .5s .3s;}
 #ribbonV, #ribbonH, #bowL, #bowR, #bowKnot{transition:transform .55s var(--ease), opacity .5s var(--ease);}
 .box-wrap.opening #lid{transform:rotateX(115deg) translateY(-6px); opacity:0;}
@@ -172,7 +159,7 @@ body{
 .box-wrap.leaving .gift-svg{transform:scale(.85) translateY(6px); opacity:0;}
 .box-wrap.leaving .tap-label{transition:opacity .3s; opacity:0;}
 
-/* ================= REVEAL SCENE ================= */
+
 .reveal-scene{position:relative; width:100%; max-width:920px;}
 .sunburst{
   position:absolute; top:50%; left:50%; width:900px; height:900px;
@@ -218,7 +205,7 @@ body{
 .item-frame svg{width:100%; height:100%;}
 .item-caption{margin-top:14px; font-family:'Fraunces',serif; font-style:italic; font-size:16px; color:var(--plum-soft);}
 
-/* ---- photo placeholder ---- */
+
 .photo-slot{
   width:100%; height:100%;
   display:flex; align-items:center; justify-content:center;
@@ -233,7 +220,7 @@ body{
 .photo-placeholder span{font-size:12px; font-weight:500; letter-spacing:.02em; text-align:center; padding:0 10px;}
 .photo-slot img{width:100%; height:100%; object-fit:cover; border-radius:12px; display:block;}
 
-/* ---- lightbox for bouquet / plush ---- */
+
 .lightbox-overlay{
   position:fixed; inset:0; z-index:20;
   display:flex; align-items:center; justify-content:center;
@@ -270,7 +257,7 @@ body{
   font-size:17px; line-height:1.6; color:var(--plum);
 }
 
-/* ---- music bar ---- */
+
 .music-bar{
   position:fixed; left:20px; bottom:20px; z-index:25;
   display:flex; align-items:center; gap:10px;
@@ -305,7 +292,7 @@ body{
 .envelope-card{cursor:pointer;}
 .envelope-card .item-frame{background:linear-gradient(160deg,#fff,#FFF3D8);}
 
-/* ================= GALLERY CARD + OVERLAY ================= */
+
 .gallery-card .item-frame{background:linear-gradient(160deg,#fff,#FFF3D8);}
 .gallery-overlay .letter-paper{max-width:760px; padding:44px 34px 38px;}
 .gallery-grid{
@@ -331,7 +318,7 @@ body{
 .gallery-placeholder span{font-size:10.5px; font-weight:500; letter-spacing:.02em; text-align:center; padding:0 8px;}
 .gallery-caption-row{margin-top:20px; text-align:center;}
 
-/* fullscreen single-photo viewer opened from a gallery tile */
+
 .gallery-viewer{
   position:fixed; inset:0; z-index:30;
   display:flex; align-items:center; justify-content:center;
@@ -359,7 +346,7 @@ body{
   .gallery-grid{grid-template-columns:repeat(2,1fr); gap:10px;}
 }
 
-/* ================= LETTER OVERLAY ================= */
+
 .overlay{
   position:fixed; inset:0; z-index:20;
   display:flex; align-items:center; justify-content:center;
@@ -429,7 +416,6 @@ body{
 
 <div id="app">
 
-  <!-- ============ SCREEN 1 : PASSCODE ============ -->
   <section class="screen active" id="screen-lock">
     <div class="lock-card">
       <svg class="sunmark" viewBox="0 0 64 64">
@@ -455,26 +441,26 @@ body{
     </div>
   </section>
 
-  <!-- ============ SCREEN 2 : GIFT BOX ============ -->
+
   <section class="screen" id="screen-gift">
     <div class="box-wrap" id="boxWrap">
       <div class="box-glow"></div>
       <svg class="gift-svg" id="giftSvg" viewBox="0 0 220 200">
-        <!-- shadow -->
+
         <ellipse cx="110" cy="188" rx="70" ry="9" fill="#5A2338" opacity=".12"/>
-        <!-- box base -->
+
         <rect x="34" y="90" width="152" height="90" rx="10" fill="#F3B23E"/>
         <rect x="34" y="90" width="152" height="90" rx="10" fill="url(#boxShade)"/>
-        <!-- lid group -->
+
         <g id="lid">
           <rect x="24" y="70" width="172" height="34" rx="10" fill="#DE9524"/>
           <rect x="24" y="70" width="172" height="34" rx="10" fill="url(#lidShade)"/>
         </g>
-        <!-- vertical ribbon -->
+
         <rect id="ribbonV" x="98" y="70" width="24" height="110" fill="#5A2338" opacity=".9"/>
-        <!-- horizontal ribbon band on lid -->
+
         <rect id="ribbonH" x="24" y="80" width="172" height="14" fill="#5A2338" opacity=".9"/>
-        <!-- bow -->
+
         <path id="bowL" d="M110 68 C 70 40, 55 78, 90 76 C 70 90, 95 96, 110 70 Z" fill="#7A3550"/>
         <path id="bowR" d="M110 68 C 150 40, 165 78, 130 76 C 150 90, 125 96, 110 70 Z" fill="#7A3550"/>
         <circle id="bowKnot" cx="110" cy="70" r="9" fill="#5A2338"/>
@@ -493,7 +479,7 @@ body{
     </div>
   </section>
 
-  <!-- ============ SCREEN 3 : REVEAL ============ -->
+
   <section class="screen" id="screen-reveal">
     <div class="reveal-scene">
       <svg class="sunburst" viewBox="0 0 200 200">
@@ -506,7 +492,7 @@ body{
 
       <div class="items-row">
 
-        <!-- Bouquet -->
+
         <div class="item-card lightbox-card" id="bouquetCard">
           <div class="item-frame">
             <div class="photo-slot" id="bouquetSlot">
@@ -520,7 +506,7 @@ body{
           <p class="item-caption" id="bouquetCaption">for your hands</p>
         </div>
 
-        <!-- Plush toy -->
+
         <div class="item-card lightbox-card" id="plushCard">
           <div class="item-frame">
             <div class="photo-slot" id="plushSlot">
@@ -534,7 +520,7 @@ body{
           <p class="item-caption" id="plushCaption">for your bed</p>
         </div>
 
-        <!-- Letter -->
+
         <div class="item-card envelope-card" id="envelopeCard">
           <div class="item-frame">
             <svg viewBox="0 0 200 200">
@@ -547,7 +533,7 @@ body{
           <p class="item-caption">inhale and exhale before opening</p>
         </div>
 
-        <!-- Gallery -->
+
         <div class="item-card gallery-card" id="galleryCard">
           <div class="item-frame">
             <svg viewBox="0 0 200 200">
@@ -565,7 +551,7 @@ body{
 
 </div>
 
-<!-- ============ MUSIC BAR ============ -->
+
 <div class="music-bar" id="musicBar">
   <button class="music-toggle" id="musicToggle" aria-label="Play music">
     <svg id="playIcon" viewBox="0 0 24 24" fill="#FFF3CE"><path d="M8 5v14l11-7z"/></svg>
@@ -576,7 +562,7 @@ body{
 </div>
 <audio id="musicAudio" loop></audio>
 
-<!-- ============ BOUQUET LIGHTBOX ============ -->
+
 <div class="lightbox-overlay" id="bouquetOverlay">
   <div class="lightbox-card-inner">
     <button class="close-btn" id="closeBouquetBtn">✕</button>
@@ -591,7 +577,7 @@ body{
   </div>
 </div>
 
-<!-- ============ PLUSH LIGHTBOX ============ -->
+
 <div class="lightbox-overlay" id="plushOverlay">
   <div class="lightbox-card-inner">
     <button class="close-btn" id="closePlushBtn">✕</button>
@@ -606,7 +592,7 @@ body{
   </div>
 </div>
 
-<!-- ============ LETTER OVERLAY ============ -->
+
 <div class="overlay" id="letterOverlay">
   <div class="letter-paper">
     <button class="close-btn" id="closeLetterBtn">✕</button>
@@ -618,7 +604,7 @@ body{
   </div>
 </div>
 
-<!-- ============ GALLERY OVERLAY ============ -->
+
 <div class="overlay gallery-overlay" id="galleryOverlay">
   <div class="letter-paper">
     <button class="close-btn" id="closeGalleryBtn">✕</button>
@@ -631,7 +617,7 @@ body{
   </div>
 </div>
 
-<!-- ============ GALLERY FULLSCREEN VIEWER ============ -->
+
 <div class="gallery-viewer" id="galleryViewer">
   <div class="gallery-viewer-inner">
     <img id="galleryViewerImg" alt="">
@@ -642,7 +628,7 @@ body{
 <script>
 /* ======================= CONFIG — EDIT ME ======================= */
 const PASSCODE   = "021424";        // the code she types in
-const HINT_TEXT  = "hint: 6 digit, 2024, if yk, yk";                 // e.g. "hint: our anniversary, no spaces" — leave "" for no hint
+const HINT_TEXT  = "hint: 6 digit, 2024, if yk, yk";                 
 
 const HER_NAME   = "cutie patootie beautiful princess baby";                 // optional, used in heading if set
 const SIGNATURE  = "— always yours";   // sign-off line
@@ -691,9 +677,7 @@ const LETTER_PARAGRAPHS = [
   "as my repayment, i will forever love you, support you, marry you, be patience for you, and TANAN! HEHEHE",
   "Happy Girlfriend's Day MY BABYYYYYYYY!"
 ];
-/* =================================================================== */
 
-// ---------- ambient motes ----------
 const ambient = document.getElementById('ambient');
 for(let i=0;i<16;i++){
   const m = document.createElement('div');
@@ -707,13 +691,13 @@ for(let i=0;i<16;i++){
   ambient.appendChild(m);
 }
 
-// ---------- screen switching ----------
+
 function showScreen(id){
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
 }
 
-// ---------- passcode logic ----------
+
 const codeInput = document.getElementById('codeInput');
 const unlockBtn = document.getElementById('unlockBtn');
 const errorMsg  = document.getElementById('errorMsg');
@@ -733,7 +717,7 @@ function tryUnlock(){
 unlockBtn.addEventListener('click', tryUnlock);
 codeInput.addEventListener('keydown', e=>{ if(e.key==='Enter') tryUnlock(); });
 
-// ---------- gift box open ----------
+
 const boxWrap = document.getElementById('boxWrap');
 boxWrap.addEventListener('click', ()=>{
   if(boxWrap.classList.contains('opening')) return;
@@ -742,7 +726,7 @@ boxWrap.addEventListener('click', ()=>{
   setTimeout(()=> showScreen('screen-reveal'), 1000);
 });
 
-// ---------- photo slots: filled from CONFIG only ----------
+
 function setupPhotoSlot({imgId, placeholderId, captionId, note, presetUrl}){
   const img = document.getElementById(imgId);
   const placeholder = document.getElementById(placeholderId);
@@ -756,7 +740,7 @@ function setupPhotoSlot({imgId, placeholderId, captionId, note, presetUrl}){
 setupPhotoSlot({imgId:'bouquetImg', placeholderId:'bouquetPlaceholder', captionId:'bouquetCaption', note:BOUQUET_NOTE, presetUrl:BOUQUET_IMG});
 setupPhotoSlot({imgId:'plushImg', placeholderId:'plushPlaceholder', captionId:'plushCaption', note:PLUSH_NOTE, presetUrl:PLUSH_IMG});
 
-// ---------- bouquet lightbox ----------
+
 const bouquetOverlay = document.getElementById('bouquetOverlay');
 document.getElementById('bouquetLightboxNote').textContent = BOUQUET_LIGHTBOX_NOTE;
 if(BOUQUET_LIGHTBOX_IMG || BOUQUET_IMG){
@@ -768,7 +752,7 @@ document.getElementById('bouquetCard').addEventListener('click', ()=> bouquetOve
 document.getElementById('closeBouquetBtn').addEventListener('click', ()=> bouquetOverlay.classList.remove('active'));
 bouquetOverlay.addEventListener('click', (e)=>{ if(e.target===bouquetOverlay) bouquetOverlay.classList.remove('active'); });
 
-// ---------- plush lightbox ----------
+
 const plushOverlay = document.getElementById('plushOverlay');
 document.getElementById('plushLightboxNote').textContent = PLUSH_LIGHTBOX_NOTE;
 if(PLUSH_LIGHTBOX_IMG || PLUSH_IMG){
@@ -780,7 +764,7 @@ document.getElementById('plushCard').addEventListener('click', ()=> plushOverlay
 document.getElementById('closePlushBtn').addEventListener('click', ()=> plushOverlay.classList.remove('active'));
 plushOverlay.addEventListener('click', (e)=>{ if(e.target===plushOverlay) plushOverlay.classList.remove('active'); });
 
-// ---------- music bar ----------
+
 const musicBar = document.getElementById('musicBar');
 const musicAudio = document.getElementById('musicAudio');
 const musicToggle = document.getElementById('musicToggle');
@@ -808,7 +792,7 @@ musicToggle.addEventListener('click', ()=>{
   }
 });
 
-// ---------- letter ----------
+
 const letterOverlay = document.getElementById('letterOverlay');
 const letterBody = document.getElementById('letterBody');
 const letterSign = document.getElementById('letterSign');
@@ -851,7 +835,7 @@ letterOverlay.addEventListener('click', (e)=>{
   if(e.target === letterOverlay) letterOverlay.classList.remove('active');
 });
 
-// ---------- gallery ----------
+
 const galleryOverlay = document.getElementById('galleryOverlay');
 const galleryGrid = document.getElementById('galleryGrid');
 const galleryViewer = document.getElementById('galleryViewer');

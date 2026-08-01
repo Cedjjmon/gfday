@@ -1,917 +1,190 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <title>For You ☀</title>
-<style>
 
-@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,600;1,9..144,500&family=Outfit:wght@300;400;500;600&display=swap');
-
-:root{
-  --cream:#FFFDF6;
-  --butter:#FFF3CE;
-  --gold:#F3B23E;
-  --gold-deep:#DE9524;
-  --plum:#5A2338;
-  --plum-soft:#7A3550;
-  --ink:#3C2E1E;
-  --paper:#FFFBF0;
-  --ease: cubic-bezier(.22,1,.36,1);
-}
-
-*{box-sizing:border-box;}
-html,body{margin:0;padding:0;}
-body{
-  min-height:100vh;
-  font-family:'Outfit',sans-serif;
-  color:var(--ink);
-  background:
-    radial-gradient(ellipse 80% 60% at 20% 0%, #FFF7DC 0%, transparent 60%),
-    radial-gradient(ellipse 70% 50% at 85% 100%, #FCE8CF 0%, transparent 55%),
-    linear-gradient(180deg, var(--cream), var(--butter));
-  overflow-x:hidden;
-  position:relative;
-}
-#app{position:relative; min-height:100vh; width:100%;}
-
-
-.ambient{position:fixed; inset:0; pointer-events:none; z-index:0; overflow:hidden;}
-.mote{
-  position:absolute; border-radius:50%;
-  background:radial-gradient(circle at 35% 35%, #ffffff, var(--gold) 70%);
-  opacity:.35; filter:blur(.5px);
-  animation:drift linear infinite;
-}
-@keyframes drift{
-  0%{transform:translateY(0) translateX(0) scale(1);}
-  50%{transform:translateY(-30px) translateX(12px) scale(1.08);}
-  100%{transform:translateY(0) translateX(0) scale(1);}
-}
-
-
-.screen{
-  position:absolute; inset:0;
-  display:flex; align-items:center; justify-content:center;
-  flex-direction:column;
-  padding:32px 20px;
-  min-height:100vh;
-  opacity:0; visibility:hidden; pointer-events:none;
-  transition:opacity .7s var(--ease);
-  z-index:1;
-}
-.screen.active{opacity:1; visibility:visible; pointer-events:auto;}
-
-
-.eyebrow{
-  font-size:12px; letter-spacing:.28em; text-transform:uppercase;
-  color:var(--gold-deep); font-weight:500; margin-bottom:14px;
-}
-.lock-card{
-  background:var(--paper);
-  border-radius:28px;
-  padding:46px 38px 38px;
-  max-width:420px; width:100%;
-  text-align:center;
-  box-shadow:0 30px 60px -25px rgba(90,35,56,.25), 0 2px 6px rgba(90,35,56,.06);
-  position:relative;
-  animation:cardIn 1s var(--ease);
-}
-@keyframes cardIn{from{opacity:0; transform:translateY(18px) scale(.97);} to{opacity:1; transform:none;}}
-
-.sunmark{width:56px; height:56px; margin:0 auto 18px;}
-.lock-title{
-  font-family:'Fraunces',serif; font-weight:500; font-size:26px;
-  margin:0 0 8px; color:var(--plum); line-height:1.25;
-}
-.lock-sub{font-size:14.5px; color:#8a6f52; margin:0 0 28px; line-height:1.5;}
-
-.code-input{
-  width:100%; text-align:center;
-  font-family:'Fraunces',serif; font-size:22px; letter-spacing:.18em;
-  padding:14px 10px 12px; border:none; border-bottom:2px solid #ECD9A8;
-  background:transparent; color:var(--plum); outline:none;
-  transition:border-color .3s var(--ease);
-}
-.code-input:focus{border-color:var(--gold);}
-.code-input.shake{animation:shake .45s;}
-@keyframes shake{
-  10%,90%{transform:translateX(-2px);}
-  20%,80%{transform:translateX(4px);}
-  30%,50%,70%{transform:translateX(-8px);}
-  40%,60%{transform:translateX(8px);}
-}
-
-.unlock-btn{
-  margin-top:26px; border:none; cursor:pointer;
-  background:linear-gradient(135deg, var(--plum), var(--plum-soft));
-  color:var(--butter); font-family:'Outfit',sans-serif; font-weight:500;
-  font-size:14.5px; letter-spacing:.03em;
-  padding:14px 34px; border-radius:999px;
-  box-shadow:0 14px 26px -12px rgba(90,35,56,.55);
-  transition:transform .35s var(--ease), box-shadow .35s var(--ease);
-}
-.unlock-btn:hover{transform:translateY(-2px); box-shadow:0 18px 30px -12px rgba(90,35,56,.6);}
-.unlock-btn:active{transform:translateY(0) scale(.97);}
-
-.hint{margin-top:16px; font-size:12.5px; color:#b09772; font-style:italic;}
-.error-msg{
-  margin-top:14px; font-size:13px; color:var(--plum); min-height:18px;
-  opacity:0; transition:opacity .3s;
-}
-.error-msg.show{opacity:1;}
-
-
-.box-wrap{
-  cursor:pointer; user-select:none;
-  display:flex; flex-direction:column; align-items:center;
-  animation:floaty 4.2s ease-in-out infinite;
-}
-@keyframes floaty{0%,100%{transform:translateY(0);} 50%{transform:translateY(-10px);}}
-.box-wrap.opening{animation:none;}
-
-.box-glow{
-  position:absolute; width:280px; height:280px; border-radius:50%;
-  background:radial-gradient(circle, rgba(243,178,62,.45), transparent 70%);
-  filter:blur(10px); animation:pulseGlow 2.6s ease-in-out infinite; z-index:-1;
-}
-@keyframes pulseGlow{0%,100%{opacity:.5; transform:scale(.92);} 50%{opacity:.9; transform:scale(1.05);}}
-
-.gift-svg{width:min(60vw,260px); height:auto; display:block; filter:drop-shadow(0 22px 30px rgba(90,35,56,.22));}
-.tap-label{
-  margin-top:26px; font-family:'Fraunces',serif; font-style:italic; font-weight:500;
-  font-size:18px; color:var(--plum); letter-spacing:.02em;
-  animation:softPulse 2.2s ease-in-out infinite;
-}
-@keyframes softPulse{0%,100%{opacity:.55;} 50%{opacity:1;}}
-
-
-#lid{transform-origin:20px 78px; transition:transform .7s var(--ease), opacity .5s .3s;}
-#ribbonV, #ribbonH, #bowL, #bowR, #bowKnot{transition:transform .55s var(--ease), opacity .5s var(--ease);}
-.box-wrap.opening #lid{transform:rotateX(115deg) translateY(-6px); opacity:0;}
-.box-wrap.opening #bowL{transform:translate(-26px,-22px) rotate(-35deg); opacity:0;}
-.box-wrap.opening #bowR{transform:translate(26px,-22px) rotate(35deg); opacity:0;}
-.box-wrap.opening #bowKnot{transform:translateY(-14px) scale(.6); opacity:0;}
-.box-wrap.opening #ribbonV{opacity:0; transform:scaleY(0);}
-.box-wrap.opening .box-glow{animation:burst .6s var(--ease) forwards;}
-@keyframes burst{to{transform:scale(1.6); opacity:0;}}
-.box-wrap.opening .gift-svg{transition:transform .55s .15s var(--ease), opacity .55s .25s var(--ease);}
-.box-wrap.leaving .gift-svg{transform:scale(.85) translateY(6px); opacity:0;}
-.box-wrap.leaving .tap-label{transition:opacity .3s; opacity:0;}
-
-
-.reveal-scene{position:relative; width:100%; max-width:920px;}
-.sunburst{
-  position:absolute; top:50%; left:50%; width:900px; height:900px;
-  transform:translate(-50%,-52%); z-index:0; opacity:.35;
-  animation:spin 90s linear infinite; pointer-events:none;
-}
-@keyframes spin{to{transform:translate(-50%,-52%) rotate(360deg);}}
-
-.reveal-title{
-  text-align:center; font-family:'Fraunces',serif; font-weight:500; font-style:italic;
-  color:var(--plum); font-size:clamp(22px,3.4vw,30px); margin:0 0 40px; position:relative; z-index:2;
-}
-
-.items-row{
-  display:grid; grid-template-columns:repeat(2, 230px);
-  justify-content:center; align-items:start; gap:34px;
-  position:relative; z-index:2;
-}
-.item-card{
-  width:230px; text-align:center;
-  opacity:0; transform:translateY(40px) scale(.9);
-  animation:popIn .8s var(--ease) forwards;
-}
-.lightbox-card{cursor:pointer;}
-.item-card:nth-child(1){animation-delay:.15s;}
-.item-card:nth-child(2){animation-delay:.4s;}
-.item-card:nth-child(3){animation-delay:.65s;}
-.item-card:nth-child(4){animation-delay:.9s;}
-@keyframes popIn{
-  60%{opacity:1; transform:translateY(-8px) scale(1.03);}
-  100%{opacity:1; transform:translateY(0) scale(1);}
-}
-
-.item-frame{
-  background:var(--paper); border-radius:22px; padding:18px;
-  box-shadow:0 20px 40px -20px rgba(90,35,56,.3);
-  transition:transform .4s var(--ease), box-shadow .4s var(--ease);
-  aspect-ratio:1/1; display:flex; align-items:center; justify-content:center; overflow:hidden;
-  position:relative;
-}
-.item-card:hover .item-frame{transform:translateY(-6px) rotate(-1deg); box-shadow:0 26px 46px -18px rgba(90,35,56,.36);}
-.item-frame img{width:100%; height:100%; object-fit:cover; border-radius:12px;}
-.item-frame svg{width:100%; height:100%;}
-.item-caption{margin-top:14px; font-family:'Fraunces',serif; font-style:italic; font-size:16px; color:var(--plum-soft);}
-
-
-.photo-slot{
-  width:100%; height:100%;
-  display:flex; align-items:center; justify-content:center;
-}
-.photo-placeholder{
-  width:100%; height:100%; border-radius:14px;
-  border:2px dashed #E4C784;
-  display:flex; flex-direction:column; align-items:center; justify-content:center;
-  gap:8px; color:var(--gold-deep); background:#FFFAEC;
-}
-.photo-placeholder svg{width:34px; height:34px;}
-.photo-placeholder span{font-size:12px; font-weight:500; letter-spacing:.02em; text-align:center; padding:0 10px;}
-.photo-slot img{width:100%; height:100%; object-fit:cover; border-radius:12px; display:block;}
-
-
-.lightbox-overlay{
-  position:fixed; inset:0; z-index:20;
-  display:flex; align-items:center; justify-content:center;
-  padding:24px;
-  background:rgba(58,42,30,.38); backdrop-filter:blur(6px);
-  opacity:0; visibility:hidden; transition:opacity .45s var(--ease);
-}
-.lightbox-overlay.active{opacity:1; visibility:visible;}
-.lightbox-card-inner{
-  background:var(--paper); max-width:420px; width:100%;
-  border-radius:20px; padding:22px 22px 26px; position:relative;
-  box-shadow:0 40px 80px -30px rgba(58,42,30,.5);
-  transform:translateY(50px) scale(.94); opacity:0;
-  transition:transform .55s var(--ease), opacity .5s var(--ease);
-  text-align:center;
-}
-.lightbox-overlay.active .lightbox-card-inner{transform:translateY(0) scale(1); opacity:1; transition-delay:.1s;}
-.lightbox-img-wrap{
-  border-radius:14px; overflow:hidden; aspect-ratio:1/1;
-  display:flex; align-items:center; justify-content:center;
-  background:#FFFAEC;
-}
-.lightbox-img-wrap img{width:100%; height:100%; object-fit:cover;}
-.lightbox-placeholder{
-  width:100%; height:100%; border-radius:14px;
-  border:2px dashed #E4C784;
-  display:flex; flex-direction:column; align-items:center; justify-content:center;
-  gap:8px; color:var(--gold-deep); background:#FFFAEC;
-}
-.lightbox-placeholder svg{width:34px; height:34px;}
-.lightbox-placeholder span{font-size:12.5px; font-weight:500; letter-spacing:.02em; text-align:center; padding:0 14px;}
-.lightbox-note{
-  margin:18px 4px 4px; font-family:'Fraunces',serif; font-style:italic;
-  font-size:17px; line-height:1.6; color:var(--plum);
-}
-
-
-.music-bar{
-  position:fixed; left:20px; bottom:20px; z-index:25;
-  display:flex; align-items:center; gap:10px;
-  background:var(--paper); border-radius:999px; padding:9px 16px 9px 9px;
-  box-shadow:0 16px 34px -16px rgba(90,35,56,.4);
-  opacity:0; transform:translateY(14px); pointer-events:none;
-  transition:opacity .6s var(--ease), transform .6s var(--ease);
-}
-.music-bar.show{opacity:1; transform:translateY(0); pointer-events:auto;}
-.music-toggle{
-  width:38px; height:38px; border-radius:50%; border:none; cursor:pointer;
-  background:linear-gradient(135deg, var(--plum), var(--plum-soft));
-  display:flex; align-items:center; justify-content:center; flex-shrink:0;
-  transition:transform .3s var(--ease);
-}
-.music-toggle:active{transform:scale(.9);}
-.music-toggle svg{width:15px; height:15px;}
-.music-eq{display:flex; align-items:flex-end; gap:3px; height:16px;}
-.music-eq span{
-  width:3px; background:var(--gold); border-radius:2px; height:5px;
-  animation:eqBounce 1s ease-in-out infinite;
-  animation-play-state:paused;
-}
-.music-bar.playing .music-eq span{animation-play-state:running;}
-.music-eq span:nth-child(1){animation-delay:0s;}
-.music-eq span:nth-child(2){animation-delay:.2s;}
-.music-eq span:nth-child(3){animation-delay:.4s;}
-@keyframes eqBounce{0%,100%{height:4px;} 50%{height:15px;}}
-.music-title{font-size:12.5px; color:var(--plum-soft); font-weight:500; max-width:130px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
-@media (max-width:520px){ .music-title{max-width:80px;} .music-bar{left:12px; bottom:12px;} }
-
-.envelope-card{cursor:pointer;}
-.envelope-card .item-frame{background:linear-gradient(160deg,#fff,#FFF3D8);}
-
-
-.gallery-card .item-frame{background:linear-gradient(160deg,#fff,#FFF3D8);}
-.gallery-overlay .letter-paper{max-width:760px; padding:44px 34px 38px;}
-.gallery-grid{
-  display:grid; grid-template-columns:repeat(3,1fr); gap:14px;
-  margin-top:6px;
-}
-.gallery-item{
-  border-radius:14px; overflow:hidden; aspect-ratio:1/1;
-  background:#FFFAEC; position:relative;
-  opacity:0; transform:translateY(14px) scale(.96);
-  animation:lineIn .6s var(--ease) forwards;
-  cursor:pointer;
-}
-.gallery-item img{width:100%; height:100%; object-fit:cover; display:block; transition:transform .5s var(--ease);}
-.gallery-item:hover img{transform:scale(1.06);}
-.gallery-placeholder{
-  width:100%; height:100%; border-radius:14px;
-  border:2px dashed #E4C784;
-  display:flex; flex-direction:column; align-items:center; justify-content:center;
-  gap:6px; color:var(--gold-deep); background:#FFFAEC;
-}
-.gallery-placeholder svg{width:26px; height:26px;}
-.gallery-placeholder span{font-size:10.5px; font-weight:500; letter-spacing:.02em; text-align:center; padding:0 8px;}
-.gallery-caption-row{margin-top:20px; text-align:center;}
-
-
-.gallery-viewer{
-  position:fixed; inset:0; z-index:30;
-  display:flex; align-items:center; justify-content:center;
-  padding:24px;
-  background:rgba(58,42,30,.55); backdrop-filter:blur(6px);
-  opacity:0; visibility:hidden; transition:opacity .4s var(--ease);
-}
-.gallery-viewer.active{opacity:1; visibility:visible;}
-.gallery-viewer-inner{
-  max-width:min(88vw,560px); text-align:center;
-  transform:scale(.94); opacity:0; transition:transform .45s var(--ease), opacity .4s var(--ease);
-}
-.gallery-viewer.active .gallery-viewer-inner{transform:scale(1); opacity:1; transition-delay:.08s;}
-.gallery-viewer img{
-  display:block; max-width:100%; max-height:74vh; border-radius:16px;
-  box-shadow:0 40px 80px -30px rgba(58,42,30,.6);
-}
-.gallery-viewer-caption{
-  margin:18px 4px 0; font-family:'Fraunces',serif; font-style:italic;
-  font-size:17px; line-height:1.6; color:var(--butter);
-}
-.gallery-viewer-caption:empty{display:none;}
-
-@media (max-width:520px){
-  .gallery-grid{grid-template-columns:repeat(2,1fr); gap:10px;}
-}
-
-
-.overlay{
-  position:fixed; inset:0; z-index:20;
-  display:flex; align-items:center; justify-content:center;
-  padding:24px;
-  background:rgba(58,42,30,.38); backdrop-filter:blur(6px);
-  opacity:0; visibility:hidden; transition:opacity .45s var(--ease);
-}
-.overlay.active{opacity:1; visibility:visible;}
-
-.letter-paper{
-  background:var(--paper);
-  max-width:560px; width:100%; max-height:82vh; overflow-y:auto;
-  border-radius:18px; padding:48px 40px 40px;
-  position:relative;
-  box-shadow:0 40px 80px -30px rgba(58,42,30,.5);
-  transform:translateY(50px) scale(.94); opacity:0;
-  transition:transform .55s var(--ease), opacity .5s var(--ease);
-}
-.overlay.active .letter-paper{transform:translateY(0) scale(1); opacity:1; transition-delay:.15s;}
-
-.close-btn{
-  position:absolute; top:16px; right:18px; width:34px; height:34px; border:none;
-  background:var(--butter); color:var(--plum); border-radius:50%; cursor:pointer;
-  font-size:16px; line-height:1; display:flex; align-items:center; justify-content:center;
-  transition:transform .3s var(--ease), background .3s;
-}
-.close-btn:hover{background:var(--gold); transform:rotate(90deg);}
-
-.letter-heading{
-  font-family:'Fraunces',serif; font-weight:500; font-size:24px; color:var(--plum);
-  margin:0 0 4px;
-}
-.letter-date{font-size:12.5px; color:#b09772; margin:0 0 26px; letter-spacing:.03em;}
-
-.letter-body p{
-  font-family:'Fraunces',serif; font-size:16.5px; line-height:1.8; color:var(--ink);
-  margin:0 0 16px; opacity:0; transform:translateY(10px);
-  animation:lineIn .7s var(--ease) forwards;
-}
-@keyframes lineIn{to{opacity:1; transform:none;}}
-
-.letter-sign{
-  margin-top:22px; font-family:'Fraunces',serif; font-style:italic; font-size:18px; color:var(--plum);
-  opacity:0; transform:translateY(10px); animation:lineIn .7s var(--ease) forwards;
-}
-
-.keepsake-photo{
-  margin-top:22px; border-radius:12px; overflow:hidden; display:none;
-  opacity:0; transform:translateY(10px); animation:lineIn .7s var(--ease) forwards;
-}
-.keepsake-photo img{width:100%; display:block;}
-
-@media (max-width:520px){
-  .items-row{gap:20px; grid-template-columns:repeat(2, minmax(0, 44vw));}
-  .item-card{width:100%; min-width:150px;}
-  .letter-paper{padding:38px 24px 30px;}
-}
-
-@media (prefers-reduced-motion: reduce){
-  *{animation-duration:.01ms !important; animation-iteration-count:1 !important; transition-duration:.01ms !important;}
-}
-</style>
-</head>
+<link href="style.css" rel="stylesheet"/></head>
 <body>
-
 <div class="ambient" id="ambient"></div>
-
 <div id="app">
-
-  <section class="screen active" id="screen-lock">
-    <div class="lock-card">
-      <svg class="sunmark" viewBox="0 0 64 64">
-        <circle cx="32" cy="32" r="12" fill="#F3B23E"/>
-        <g stroke="#DE9524" stroke-width="3.4" stroke-linecap="round">
-          <line x1="32" y1="4" x2="32" y2="13"/>
-          <line x1="32" y1="51" x2="32" y2="60"/>
-          <line x1="4" y1="32" x2="13" y2="32"/>
-          <line x1="51" y1="32" x2="60" y2="32"/>
-          <line x1="11.5" y1="11.5" x2="17.8" y2="17.8"/>
-          <line x1="46.2" y1="46.2" x2="52.5" y2="52.5"/>
-          <line x1="52.5" y1="11.5" x2="46.2" y2="17.8"/>
-          <line x1="17.8" y1="46.2" x2="11.5" y2="52.5"/>
-        </g>
-      </svg>
-      <p class="eyebrow">gift for my baby</p>
-      <h1 class="lock-title">This page only opens<br>for one person WALA NAY LAIN</h1>
-      <p class="lock-sub">kung kabalo ka sa password kay kabalo ka hehe</p>
-      <input type="text" id="codeInput" class="code-input" placeholder="• • • • •" autocomplete="off" spellcheck="false">
-      <div><button class="unlock-btn" id="unlockBtn">Unlock</button></div>
-      <p class="error-msg" id="errorMsg">mali :< </p>
-      <p class="hint" id="hintText"></p>
-    </div>
-  </section>
-
-
-  <section class="screen" id="screen-gift">
-    <div class="box-wrap" id="boxWrap">
-      <div class="box-glow"></div>
-      <svg class="gift-svg" id="giftSvg" viewBox="0 0 220 200">
-
-        <ellipse cx="110" cy="188" rx="70" ry="9" fill="#5A2338" opacity=".12"/>
-
-        <rect x="34" y="90" width="152" height="90" rx="10" fill="#F3B23E"/>
-        <rect x="34" y="90" width="152" height="90" rx="10" fill="url(#boxShade)"/>
-
-        <g id="lid">
-          <rect x="24" y="70" width="172" height="34" rx="10" fill="#DE9524"/>
-          <rect x="24" y="70" width="172" height="34" rx="10" fill="url(#lidShade)"/>
-        </g>
-
-        <rect id="ribbonV" x="98" y="70" width="24" height="110" fill="#5A2338" opacity=".9"/>
-
-        <rect id="ribbonH" x="24" y="80" width="172" height="14" fill="#5A2338" opacity=".9"/>
-
-        <path id="bowL" d="M110 68 C 70 40, 55 78, 90 76 C 70 90, 95 96, 110 70 Z" fill="#7A3550"/>
-        <path id="bowR" d="M110 68 C 150 40, 165 78, 130 76 C 150 90, 125 96, 110 70 Z" fill="#7A3550"/>
-        <circle id="bowKnot" cx="110" cy="70" r="9" fill="#5A2338"/>
-        <defs>
-          <linearGradient id="boxShade" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0" stop-color="#fff" stop-opacity=".18"/>
-            <stop offset="1" stop-color="#fff" stop-opacity="0"/>
-          </linearGradient>
-          <linearGradient id="lidShade" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0" stop-color="#fff" stop-opacity=".25"/>
-            <stop offset="1" stop-color="#fff" stop-opacity="0"/>
-          </linearGradient>
-        </defs>
-      </svg>
-      <p class="tap-label">Open me plsss</p>
-    </div>
-  </section>
-
-
-  <section class="screen" id="screen-reveal">
-    <div class="reveal-scene">
-      <svg class="sunburst" viewBox="0 0 200 200">
-        <g fill="none" stroke="#F3B23E" stroke-width="1.4">
-          <circle cx="100" cy="100" r="95"/>
-          <circle cx="100" cy="100" r="78"/>
-        </g>
-      </svg>
-      <h2 class="reveal-title">happy International girlfriend's day BABE!</h2>
-
-      <div class="items-row">
-
-
-        <div class="item-card lightbox-card" id="bouquetCard">
-          <div class="item-frame">
-            <div class="photo-slot" id="bouquetSlot">
-              <img id="bouquetImg" alt="Yellow bouquet" style="display:none;">
-              <div class="photo-placeholder" id="bouquetPlaceholder">
-                <svg viewBox="0 0 24 24" fill="none" stroke="#DE9524" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2.5"/><circle cx="8.5" cy="9.5" r="1.6"/><path d="M21 15l-5.5-5.5a1.5 1.5 0 0 0-2.1 0L4 19"/></svg>
-                <span>bouquet photo — set BOUQUET_IMG in the code</span>
-              </div>
-            </div>
-          </div>
-          <p class="item-caption" id="bouquetCaption">for your hands</p>
-        </div>
-
-
-        <div class="item-card lightbox-card" id="plushCard">
-          <div class="item-frame">
-            <div class="photo-slot" id="plushSlot">
-              <img id="plushImg" alt="Yellow stuffed toy" style="display:none;">
-              <div class="photo-placeholder" id="plushPlaceholder">
-                <svg viewBox="0 0 24 24" fill="none" stroke="#DE9524" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2.5"/><circle cx="8.5" cy="9.5" r="1.6"/><path d="M21 15l-5.5-5.5a1.5 1.5 0 0 0-2.1 0L4 19"/></svg>
-                <span>plushie photo — set PLUSH_IMG in the code</span>
-              </div>
-            </div>
-          </div>
-          <p class="item-caption" id="plushCaption">for your bed</p>
-        </div>
-
-
-        <div class="item-card envelope-card" id="envelopeCard">
-          <div class="item-frame">
-            <svg viewBox="0 0 200 200">
-              <rect x="40" y="65" width="120" height="80" rx="6" fill="#FFF3D8" stroke="#DE9524" stroke-width="2"/>
-              <path d="M40 68 L100 115 L160 68" fill="none" stroke="#DE9524" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
-              <circle cx="100" cy="105" r="12" fill="#5A2338"/>
-              <path d="M94 105 l4 5 l9 -11" stroke="#F3B23E" stroke-width="2.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-          </div>
-          <p class="item-caption">inhale and exhale before opening</p>
-        </div>
-
-
-        <div class="item-card gallery-card" id="galleryCard">
-          <div class="item-frame">
-            <svg viewBox="0 0 200 200">
-              <rect x="35" y="50" width="130" height="100" rx="10" fill="#FFF3D8" stroke="#DE9524" stroke-width="2"/>
-              <circle cx="65" cy="80" r="11" fill="#F3B23E"/>
-              <path d="M35 130 L75 100 L105 122 L135 92 L165 118 L165 140 a10 10 0 0 1 -10 10 L45 150 a10 10 0 0 1 -10 -10 Z" fill="#DE9524"/>
-            </svg>
-          </div>
-          <p class="item-caption">a lil gallery of us</p>
-        </div>
-
-      </div>
-    </div>
-  </section>
-
+<section class="screen active" id="screen-lock">
+<div class="lock-card">
+<svg class="sunmark" viewbox="0 0 64 64">
+<circle cx="32" cy="32" fill="#F3B23E" r="12"></circle>
+<g stroke="#DE9524" stroke-linecap="round" stroke-width="3.4">
+<line x1="32" x2="32" y1="4" y2="13"></line>
+<line x1="32" x2="32" y1="51" y2="60"></line>
+<line x1="4" x2="13" y1="32" y2="32"></line>
+<line x1="51" x2="60" y1="32" y2="32"></line>
+<line x1="11.5" x2="17.8" y1="11.5" y2="17.8"></line>
+<line x1="46.2" x2="52.5" y1="46.2" y2="52.5"></line>
+<line x1="52.5" x2="46.2" y1="11.5" y2="17.8"></line>
+<line x1="17.8" x2="11.5" y1="46.2" y2="52.5"></line>
+</g>
+</svg>
+<p class="eyebrow">gift for my baby</p>
+<h1 class="lock-title">This page only opens<br/>for one person WALA NAY LAIN</h1>
+<p class="lock-sub">kung kabalo ka sa password kay kabalo ka hehe</p>
+<input autocomplete="off" class="code-input" id="codeInput" placeholder="• • • • •" spellcheck="false" type="text"/>
+<div><button class="unlock-btn" id="unlockBtn">Unlock</button></div>
+<p class="error-msg" id="errorMsg">mali :&lt; </p>
+<p class="hint" id="hintText"></p>
 </div>
-
-
+</section>
+<section class="screen" id="screen-gift">
+<div class="box-wrap" id="boxWrap">
+<div class="box-glow"></div>
+<svg class="gift-svg" id="giftSvg" viewbox="0 0 220 200">
+<ellipse cx="110" cy="188" fill="#5A2338" opacity=".12" rx="70" ry="9"></ellipse>
+<rect fill="#F3B23E" height="90" rx="10" width="152" x="34" y="90"></rect>
+<rect fill="url(#boxShade)" height="90" rx="10" width="152" x="34" y="90"></rect>
+<g id="lid">
+<rect fill="#DE9524" height="34" rx="10" width="172" x="24" y="70"></rect>
+<rect fill="url(#lidShade)" height="34" rx="10" width="172" x="24" y="70"></rect>
+</g>
+<rect fill="#5A2338" height="110" id="ribbonV" opacity=".9" width="24" x="98" y="70"></rect>
+<rect fill="#5A2338" height="14" id="ribbonH" opacity=".9" width="172" x="24" y="80"></rect>
+<path d="M110 68 C 70 40, 55 78, 90 76 C 70 90, 95 96, 110 70 Z" fill="#7A3550" id="bowL"></path>
+<path d="M110 68 C 150 40, 165 78, 130 76 C 150 90, 125 96, 110 70 Z" fill="#7A3550" id="bowR"></path>
+<circle cx="110" cy="70" fill="#5A2338" id="bowKnot" r="9"></circle>
+<defs>
+<lineargradient id="boxShade" x1="0" x2="0" y1="0" y2="1">
+<stop offset="0" stop-color="#fff" stop-opacity=".18"></stop>
+<stop offset="1" stop-color="#fff" stop-opacity="0"></stop>
+</lineargradient>
+<lineargradient id="lidShade" x1="0" x2="0" y1="0" y2="1">
+<stop offset="0" stop-color="#fff" stop-opacity=".25"></stop>
+<stop offset="1" stop-color="#fff" stop-opacity="0"></stop>
+</lineargradient>
+</defs>
+</svg>
+<p class="tap-label">Open me plsss</p>
+</div>
+</section>
+<section class="screen" id="screen-reveal">
+<div class="reveal-scene">
+<svg class="sunburst" viewbox="0 0 200 200">
+<g fill="none" stroke="#F3B23E" stroke-width="1.4">
+<circle cx="100" cy="100" r="95"></circle>
+<circle cx="100" cy="100" r="78"></circle>
+</g>
+</svg>
+<h2 class="reveal-title">happy International girlfriend's day BABE!</h2>
+<div class="items-row">
+<div class="item-card lightbox-card" id="bouquetCard">
+<div class="item-frame">
+<div class="photo-slot" id="bouquetSlot">
+<img alt="Yellow bouquet" id="bouquetImg" style="display:none;"/>
+<div class="photo-placeholder" id="bouquetPlaceholder">
+<svg fill="none" stroke="#DE9524" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6" viewbox="0 0 24 24"><rect height="16" rx="2.5" width="18" x="3" y="4"></rect><circle cx="8.5" cy="9.5" r="1.6"></circle><path d="M21 15l-5.5-5.5a1.5 1.5 0 0 0-2.1 0L4 19"></path></svg>
+<span>bouquet photo — set BOUQUET_IMG in the code</span>
+</div>
+</div>
+</div>
+<p class="item-caption" id="bouquetCaption">for your hands</p>
+</div>
+<div class="item-card lightbox-card" id="plushCard">
+<div class="item-frame">
+<div class="photo-slot" id="plushSlot">
+<img alt="Yellow stuffed toy" id="plushImg" style="display:none;"/>
+<div class="photo-placeholder" id="plushPlaceholder">
+<svg fill="none" stroke="#DE9524" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6" viewbox="0 0 24 24"><rect height="16" rx="2.5" width="18" x="3" y="4"></rect><circle cx="8.5" cy="9.5" r="1.6"></circle><path d="M21 15l-5.5-5.5a1.5 1.5 0 0 0-2.1 0L4 19"></path></svg>
+<span>plushie photo — set PLUSH_IMG in the code</span>
+</div>
+</div>
+</div>
+<p class="item-caption" id="plushCaption">for your bed</p>
+</div>
+<div class="item-card envelope-card" id="envelopeCard">
+<div class="item-frame">
+<svg viewbox="0 0 200 200">
+<rect fill="#FFF3D8" height="80" rx="6" stroke="#DE9524" stroke-width="2" width="120" x="40" y="65"></rect>
+<path d="M40 68 L100 115 L160 68" fill="none" stroke="#DE9524" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.4"></path>
+<circle cx="100" cy="105" fill="#5A2338" r="12"></circle>
+<path d="M94 105 l4 5 l9 -11" fill="none" stroke="#F3B23E" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.4"></path>
+</svg>
+</div>
+<p class="item-caption">inhale and exhale before opening</p>
+</div>
+<div class="item-card gallery-card" id="galleryCard">
+<div class="item-frame">
+<svg viewbox="0 0 200 200">
+<rect fill="#FFF3D8" height="100" rx="10" stroke="#DE9524" stroke-width="2" width="130" x="35" y="50"></rect>
+<circle cx="65" cy="80" fill="#F3B23E" r="11"></circle>
+<path d="M35 130 L75 100 L105 122 L135 92 L165 118 L165 140 a10 10 0 0 1 -10 10 L45 150 a10 10 0 0 1 -10 -10 Z" fill="#DE9524"></path>
+</svg>
+</div>
+<p class="item-caption">a lil gallery of us</p>
+</div>
+</div>
+</div>
+</section>
+</div>
 <div class="music-bar" id="musicBar">
-  <button class="music-toggle" id="musicToggle" aria-label="Play music">
-    <svg id="playIcon" viewBox="0 0 24 24" fill="#FFF3CE"><path d="M8 5v14l11-7z"/></svg>
-    <svg id="pauseIcon" viewBox="0 0 24 24" fill="#FFF3CE" style="display:none;"><path d="M6 5h4v14H6zM14 5h4v14h-4z"/></svg>
-  </button>
-  <div class="music-eq"><span></span><span></span><span></span></div>
-  <span class="music-title" id="musicTitle">Our Song</span>
+<button aria-label="Play music" class="music-toggle" id="musicToggle">
+<svg fill="#FFF3CE" id="playIcon" viewbox="0 0 24 24"><path d="M8 5v14l11-7z"></path></svg>
+<svg fill="#FFF3CE" id="pauseIcon" style="display:none;" viewbox="0 0 24 24"><path d="M6 5h4v14H6zM14 5h4v14h-4z"></path></svg>
+</button>
+<div class="music-eq"><span></span><span></span><span></span></div>
+<span class="music-title" id="musicTitle">Our Song</span>
 </div>
-<audio id="musicAudio" loop></audio>
-
-
+<audio id="musicAudio" loop=""></audio>
 <div class="lightbox-overlay" id="bouquetOverlay">
-  <div class="lightbox-card-inner">
-    <button class="close-btn" id="closeBouquetBtn">✕</button>
-    <div class="lightbox-img-wrap">
-      <img id="bouquetLightboxImg" alt="Yellow bouquet" style="display:none;">
-      <div class="lightbox-placeholder" id="bouquetLightboxPlaceholder">
-        <svg viewBox="0 0 24 24" fill="none" stroke="#DE9524" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2.5"/><circle cx="8.5" cy="9.5" r="1.6"/><path d="M21 15l-5.5-5.5a1.5 1.5 0 0 0-2.1 0L4 19"/></svg>
-        <span>no photo yet — set BOUQUET_IMG in the code</span>
-      </div>
-    </div>
-    <p class="lightbox-note" id="bouquetLightboxNote"></p>
-  </div>
+<div class="lightbox-card-inner">
+<button class="close-btn" id="closeBouquetBtn">✕</button>
+<div class="lightbox-img-wrap">
+<img alt="Yellow bouquet" id="bouquetLightboxImg" style="display:none;"/>
+<div class="lightbox-placeholder" id="bouquetLightboxPlaceholder">
+<svg fill="none" stroke="#DE9524" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6" viewbox="0 0 24 24"><rect height="16" rx="2.5" width="18" x="3" y="4"></rect><circle cx="8.5" cy="9.5" r="1.6"></circle><path d="M21 15l-5.5-5.5a1.5 1.5 0 0 0-2.1 0L4 19"></path></svg>
+<span>no photo yet — set BOUQUET_IMG in the code</span>
 </div>
-
-
+</div>
+<p class="lightbox-note" id="bouquetLightboxNote"></p>
+</div>
+</div>
 <div class="lightbox-overlay" id="plushOverlay">
-  <div class="lightbox-card-inner">
-    <button class="close-btn" id="closePlushBtn">✕</button>
-    <div class="lightbox-img-wrap">
-      <img id="plushLightboxImg" alt="Yellow stuffed toy" style="display:none;">
-      <div class="lightbox-placeholder" id="plushLightboxPlaceholder">
-        <svg viewBox="0 0 24 24" fill="none" stroke="#DE9524" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2.5"/><circle cx="8.5" cy="9.5" r="1.6"/><path d="M21 15l-5.5-5.5a1.5 1.5 0 0 0-2.1 0L4 19"/></svg>
-        <span>no photo yet — set PLUSH_IMG in the code</span>
-      </div>
-    </div>
-    <p class="lightbox-note" id="plushLightboxNote"></p>
-  </div>
+<div class="lightbox-card-inner">
+<button class="close-btn" id="closePlushBtn">✕</button>
+<div class="lightbox-img-wrap">
+<img alt="Yellow stuffed toy" id="plushLightboxImg" style="display:none;"/>
+<div class="lightbox-placeholder" id="plushLightboxPlaceholder">
+<svg fill="none" stroke="#DE9524" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6" viewbox="0 0 24 24"><rect height="16" rx="2.5" width="18" x="3" y="4"></rect><circle cx="8.5" cy="9.5" r="1.6"></circle><path d="M21 15l-5.5-5.5a1.5 1.5 0 0 0-2.1 0L4 19"></path></svg>
+<span>no photo yet — set PLUSH_IMG in the code</span>
 </div>
-
-
+</div>
+<p class="lightbox-note" id="plushLightboxNote"></p>
+</div>
+</div>
 <div class="overlay" id="letterOverlay">
-  <div class="letter-paper">
-    <button class="close-btn" id="closeLetterBtn">✕</button>
-    <h3 class="letter-heading" id="letterHeading">To My Favorite Person,</h3>
-    <p class="letter-date" id="letterDate"></p>
-    <div class="letter-body" id="letterBody"></div>
-    <p class="letter-sign" id="letterSign"></p>
-    <div class="keepsake-photo" id="keepsakePhoto"><img id="keepsakeImg" alt=""></div>
-  </div>
+<div class="letter-paper">
+<button class="close-btn" id="closeLetterBtn">✕</button>
+<h3 class="letter-heading" id="letterHeading">To My Favorite Person,</h3>
+<p class="letter-date" id="letterDate"></p>
+<div class="letter-body" id="letterBody"></div>
+<p class="letter-sign" id="letterSign"></p>
+<div class="keepsake-photo" id="keepsakePhoto"><img alt="" id="keepsakeImg"/></div>
 </div>
-
-
+</div>
 <div class="overlay gallery-overlay" id="galleryOverlay">
-  <div class="letter-paper">
-    <button class="close-btn" id="closeGalleryBtn">✕</button>
-    <h3 class="letter-heading" id="galleryHeading">A Lil Gallery of Us</h3>
-    <p class="letter-date" id="galleryDate">little moments, all in one place</p>
-    <div class="gallery-grid" id="galleryGrid"></div>
-    <div class="gallery-caption-row">
-      <p class="lightbox-note" id="galleryNote">tap any photo to zoom in</p>
-    </div>
-  </div>
+<div class="letter-paper">
+<button class="close-btn" id="closeGalleryBtn">✕</button>
+<h3 class="letter-heading" id="galleryHeading">A Lil Gallery of Us</h3>
+<p class="letter-date" id="galleryDate">little moments, all in one place</p>
+<div class="gallery-grid" id="galleryGrid"></div>
+<div class="gallery-caption-row">
+<p class="lightbox-note" id="galleryNote">tap any photo to zoom in</p>
 </div>
-
-
+</div>
+</div>
 <div class="gallery-viewer" id="galleryViewer">
-  <div class="gallery-viewer-inner">
-    <img id="galleryViewerImg" alt="">
-    <p class="gallery-viewer-caption" id="galleryViewerCaption"></p>
-  </div>
+<div class="gallery-viewer-inner">
+<img alt="" id="galleryViewerImg"/>
+<p class="gallery-viewer-caption" id="galleryViewerCaption"></p>
+</div>
 </div>
 
-<script>
-/* ======================= CONFIG — EDIT ME ======================= */
-const PASSCODE   = "021424";        // the code she types in
-const HINT_TEXT  = "hint: 6 digit, 2024, if yk, yk";                 
-
-const HER_NAME   = "cutie patootie beautiful princess baby";                 // optional, used in heading if set
-const SIGNATURE  = "— always yours";   // sign-off line
-
-// Paste an image URL, or the filename of an image you place in the SAME
-// FOLDER as this html file (e.g. "bouquet.jpg"), to replace the dashed
-// placeholder with a real photo. Leave "" to keep the placeholder.
-const BOUQUET_IMG  = "smol.png";      // small card image
-const PLUSH_IMG    = "3.png";        // small card image
-const KEEPSAKE_IMG = "";
-
-// Large images shown after clicking the cards
-const BOUQUET_LIGHTBOX_IMG = "flowers.png";
-const PLUSH_LIGHTBOX_IMG   = "4.png";   // optional extra photo shown inside the letter
-
-// The small note that appears under each photo, and again when it's tapped.
-const BOUQUET_NOTE = "kani lng sang amay";
-const PLUSH_NOTE   = "kani rapud na amay";
-
-// Separate notes shown inside the popup
-const BOUQUET_LIGHTBOX_NOTE = "bogsh!, dako na flower bouquet hehe";
-const PLUSH_LIGHTBOX_NOTE   = "biiiggggg cute yellow teddy bear hehe";
-
-// Paste a song URL (or base64 data-URL of an mp3) to enable the music bar.
-const MUSIC_SRC   = "Valentine .mp3";
-const MUSIC_TITLE = "play me";
-
-// Photos for the gallery section. Add as many as you want — each one is
-// { src: "filename or URL", caption: "small note under it" }.
-// Leave src as "" to keep a dashed placeholder tile for that slot.
-const GALLERY_IMAGES = [
-  { src: "h2.jpg", caption: "cute cute si baby" },
-  { src: "h3.jpg", caption: "kaonnnn" },
-  { src: "h4.jpg", caption: "naa nasad jollibee kaonn!!!" },
-  { src: "h5.jpg", caption: "nag palit mi og gamit hehe" },
-  { src: "h6.jpg", caption: "awww cutee si babbyyyy" },
-  { src: "h7.jpg", caption: "nang laag mi hehehe" }
-];
-
-const LETTER_PARAGRAPHS = [
-  "Happy Internation Girlfriend's Day BABE! I wanted to make you something special, just for you, to show how that how much i love you babe",
-  "I dont want you to think that i dont love you or i dont show effort, so i created this little gift for you, to show how much i value you and how much i love you",
-  "Thank you babe for bein there for me, my bestfriend, my tita, my princess, my wife, my everything.",
-  "maunsa nlng ko kung wala ka, basin namatay na guro ko kay depress baya ko sauna hehe, pag abot nimo kay sunshine and rainbows na permi hehe",
-  "like really baby thank you sa tanan, sa imong support saakong hobbies, gina push ko nimo mo na mogawas ko saakong comfort zone, and tanan tanan jud",
-  "as my repayment, i will forever love you, support you, marry you, be patience for you, and TANAN! HEHEHE",
-  "Happy Girlfriend's Day MY BABYYYYYYYY!"
-];
-
-const ambient = document.getElementById('ambient');
-for(let i=0;i<16;i++){
-  const m = document.createElement('div');
-  m.className='mote';
-  const s = 4 + Math.random()*8;
-  m.style.width = s+'px'; m.style.height = s+'px';
-  m.style.left = Math.random()*100+'vw';
-  m.style.top = Math.random()*100+'vh';
-  m.style.animationDuration = (6+Math.random()*8)+'s';
-  m.style.animationDelay = (Math.random()*5)+'s';
-  ambient.appendChild(m);
-}
-
-
-function showScreen(id){
-  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
-}
-
-
-const codeInput = document.getElementById('codeInput');
-const unlockBtn = document.getElementById('unlockBtn');
-const errorMsg  = document.getElementById('errorMsg');
-const hintText  = document.getElementById('hintText');
-if(HINT_TEXT) hintText.textContent = HINT_TEXT;
-
-function tryUnlock(){
-  const val = codeInput.value.trim().toLowerCase();
-  if(val === PASSCODE.trim().toLowerCase()){
-    showScreen('screen-gift');
-  } else {
-    codeInput.classList.remove('shake'); void codeInput.offsetWidth;
-    codeInput.classList.add('shake');
-    errorMsg.classList.add('show');
-  }
-}
-unlockBtn.addEventListener('click', tryUnlock);
-codeInput.addEventListener('keydown', e=>{ if(e.key==='Enter') tryUnlock(); });
-
-
-const boxWrap = document.getElementById('boxWrap');
-boxWrap.addEventListener('click', ()=>{
-  if(boxWrap.classList.contains('opening')) return;
-  boxWrap.classList.add('opening');
-  setTimeout(()=> boxWrap.classList.add('leaving'), 550);
-  setTimeout(()=> showScreen('screen-reveal'), 1000);
-});
-
-
-function setupPhotoSlot({imgId, placeholderId, captionId, note, presetUrl}){
-  const img = document.getElementById(imgId);
-  const placeholder = document.getElementById(placeholderId);
-  document.getElementById(captionId).textContent = note;
-  if(presetUrl){
-    img.src = presetUrl;
-    img.style.display='block';
-    placeholder.style.display='none';
-  }
-}
-setupPhotoSlot({imgId:'bouquetImg', placeholderId:'bouquetPlaceholder', captionId:'bouquetCaption', note:BOUQUET_NOTE, presetUrl:BOUQUET_IMG});
-setupPhotoSlot({imgId:'plushImg', placeholderId:'plushPlaceholder', captionId:'plushCaption', note:PLUSH_NOTE, presetUrl:PLUSH_IMG});
-
-
-const bouquetOverlay = document.getElementById('bouquetOverlay');
-document.getElementById('bouquetLightboxNote').textContent = BOUQUET_LIGHTBOX_NOTE;
-if(BOUQUET_LIGHTBOX_IMG || BOUQUET_IMG){
-  document.getElementById('bouquetLightboxImg').src = BOUQUET_LIGHTBOX_IMG || BOUQUET_IMG;
-  document.getElementById('bouquetLightboxImg').style.display='block';
-  document.getElementById('bouquetLightboxPlaceholder').style.display='none';
-}
-document.getElementById('bouquetCard').addEventListener('click', ()=> bouquetOverlay.classList.add('active'));
-document.getElementById('closeBouquetBtn').addEventListener('click', ()=> bouquetOverlay.classList.remove('active'));
-bouquetOverlay.addEventListener('click', (e)=>{ if(e.target===bouquetOverlay) bouquetOverlay.classList.remove('active'); });
-
-
-const plushOverlay = document.getElementById('plushOverlay');
-document.getElementById('plushLightboxNote').textContent = PLUSH_LIGHTBOX_NOTE;
-if(PLUSH_LIGHTBOX_IMG || PLUSH_IMG){
-  document.getElementById('plushLightboxImg').src = PLUSH_LIGHTBOX_IMG || PLUSH_IMG;
-  document.getElementById('plushLightboxImg').style.display='block';
-  document.getElementById('plushLightboxPlaceholder').style.display='none';
-}
-document.getElementById('plushCard').addEventListener('click', ()=> plushOverlay.classList.add('active'));
-document.getElementById('closePlushBtn').addEventListener('click', ()=> plushOverlay.classList.remove('active'));
-plushOverlay.addEventListener('click', (e)=>{ if(e.target===plushOverlay) plushOverlay.classList.remove('active'); });
-
-
-const musicBar = document.getElementById('musicBar');
-const musicAudio = document.getElementById('musicAudio');
-const musicToggle = document.getElementById('musicToggle');
-const playIcon = document.getElementById('playIcon');
-const pauseIcon = document.getElementById('pauseIcon');
-document.getElementById('musicTitle').textContent = MUSIC_TITLE;
-
-if(MUSIC_SRC){ musicAudio.src = MUSIC_SRC; }
-setTimeout(()=> musicBar.classList.add('show'), 400);
-
-musicToggle.addEventListener('click', ()=>{
-  if(!MUSIC_SRC){
-    document.getElementById('musicTitle').textContent = "add a song in the code ♪";
-    setTimeout(()=> document.getElementById('musicTitle').textContent = MUSIC_TITLE, 2200);
-    return;
-  }
-  if(musicAudio.paused){
-    musicAudio.play().catch(()=>{});
-    musicBar.classList.add('playing');
-    playIcon.style.display='none'; pauseIcon.style.display='block';
-  } else {
-    musicAudio.pause();
-    musicBar.classList.remove('playing');
-    playIcon.style.display='block'; pauseIcon.style.display='none';
-  }
-});
-
-
-const letterOverlay = document.getElementById('letterOverlay');
-const letterBody = document.getElementById('letterBody');
-const letterSign = document.getElementById('letterSign');
-const letterDate = document.getElementById('letterDate');
-const letterHeading = document.getElementById('letterHeading');
-
-if(HER_NAME) letterHeading.textContent = `To My ${HER_NAME},`;
-letterDate.textContent = new Date().toLocaleDateString(undefined,{year:'numeric', month:'long', day:'numeric'});
-letterSign.textContent = SIGNATURE;
-
-function buildLetter(){
-  letterBody.innerHTML='';
-  LETTER_PARAGRAPHS.forEach((txt,i)=>{
-    const p=document.createElement('p');
-    p.textContent = txt;
-    p.style.animationDelay = (0.25 + i*0.35)+'s';
-    letterBody.appendChild(p);
-  });
-  letterSign.style.animationDelay = (0.25 + LETTER_PARAGRAPHS.length*0.35)+'s';
-
-  const photoWrap = document.getElementById('keepsakePhoto');
-  const photoImg = document.getElementById('keepsakeImg');
-  if(KEEPSAKE_IMG){
-    photoImg.src = KEEPSAKE_IMG;
-    photoWrap.style.display='block';
-    photoWrap.style.animationDelay = (0.4 + LETTER_PARAGRAPHS.length*0.35)+'s';
-  } else {
-    photoWrap.style.display='none';
-  }
-}
-
-document.getElementById('envelopeCard').addEventListener('click', ()=>{
-  buildLetter();
-  letterOverlay.classList.add('active');
-});
-document.getElementById('closeLetterBtn').addEventListener('click', ()=>{
-  letterOverlay.classList.remove('active');
-});
-letterOverlay.addEventListener('click', (e)=>{
-  if(e.target === letterOverlay) letterOverlay.classList.remove('active');
-});
-
-
-const galleryOverlay = document.getElementById('galleryOverlay');
-const galleryGrid = document.getElementById('galleryGrid');
-const galleryViewer = document.getElementById('galleryViewer');
-const galleryViewerImg = document.getElementById('galleryViewerImg');
-const galleryViewerCaption = document.getElementById('galleryViewerCaption');
-
-function buildGallery(){
-  galleryGrid.innerHTML = '';
-  GALLERY_IMAGES.forEach((item, i)=>{
-    const tile = document.createElement('div');
-    tile.className = 'gallery-item';
-    tile.style.animationDelay = (0.1 + i*0.08) + 's';
-
-    if(item.src){
-      const img = document.createElement('img');
-      img.src = item.src;
-      img.alt = item.caption || 'gallery photo';
-      tile.appendChild(img);
-      tile.addEventListener('click', ()=>{
-        galleryViewerImg.src = item.src;
-        galleryViewerImg.alt = item.caption || 'gallery photo';
-        galleryViewerCaption.textContent = item.caption || '';
-        galleryViewer.classList.add('active');
-      });
-    } else {
-      const ph = document.createElement('div');
-      ph.className = 'gallery-placeholder';
-      ph.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="#DE9524" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2.5"/><circle cx="8.5" cy="9.5" r="1.6"/><path d="M21 15l-5.5-5.5a1.5 1.5 0 0 0-2.1 0L4 19"/></svg><span>add a photo in GALLERY_IMAGES</span>';
-      tile.appendChild(ph);
-    }
-    galleryGrid.appendChild(tile);
-  });
-}
-
-document.getElementById('galleryCard').addEventListener('click', ()=>{
-  buildGallery();
-  galleryOverlay.classList.add('active');
-});
-document.getElementById('closeGalleryBtn').addEventListener('click', ()=>{
-  galleryOverlay.classList.remove('active');
-});
-galleryOverlay.addEventListener('click', (e)=>{
-  if(e.target === galleryOverlay) galleryOverlay.classList.remove('active');
-});
-galleryViewer.addEventListener('click', ()=>{
-  galleryViewer.classList.remove('active');
-});
-
-// ---------- autoplay music on visit ----------
-// Browsers block audio autoplay until the visitor has interacted with the
-// page, so we try to play immediately, and if that's blocked, we start it
-// on the very first tap/click/keypress anywhere on the page instead.
-function tryAutoplayMusic(){
-  if(!MUSIC_SRC) return;
-  const playPromise = musicAudio.play();
-  if(playPromise !== undefined){
-    playPromise.then(()=>{
-      musicBar.classList.add('playing');
-      playIcon.style.display='none'; pauseIcon.style.display='block';
-    }).catch(()=>{
-      const startOnInteract = ()=>{
-        musicAudio.play().then(()=>{
-          musicBar.classList.add('playing');
-          playIcon.style.display='none'; pauseIcon.style.display='block';
-        }).catch(()=>{});
-        document.removeEventListener('click', startOnInteract);
-        document.removeEventListener('keydown', startOnInteract);
-        document.removeEventListener('touchstart', startOnInteract);
-      };
-      document.addEventListener('click', startOnInteract, {once:true});
-      document.addEventListener('keydown', startOnInteract, {once:true});
-      document.addEventListener('touchstart', startOnInteract, {once:true});
-    });
-  }
-}
-tryAutoplayMusic();
-</script>
-</body>
+<script src="script.js"></script></body>
 </html>
